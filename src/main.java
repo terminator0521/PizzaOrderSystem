@@ -11,7 +11,8 @@ import javax.swing.*;
 
 public class main
 {
-
+    static int sleepTime = 20; //delay time for resource management
+    
     public static void main(String[] args)
     {
         mainFrame frame = new mainFrame();
@@ -23,11 +24,20 @@ public class main
 
         });
 
-//        frame.jLabel5.setText("hi");
         while (true)
         {
-            info(frame, (String) frame.Size.getSelectedItem(), (int) frame.jSpinner1.getValue(), frame.jCheckBox1.isSelected());
+            //logic
+            info(frame, frame.Size.getSelectedIndex(), (int) frame.jSpinner1.getValue(), frame.jCheckBox1.isSelected());
 
+            
+            //prevent wasted resources
+            try
+            {
+                Thread.sleep(sleepTime);
+            }
+            catch (InterruptedException e)
+            {
+            }
         }
     }
 
@@ -41,20 +51,20 @@ public class main
      * @param delivery
      * @return subtotal
      */
-    public static double input(String size, int noToppings, boolean delivery)
+    public static double input(int size, int noToppings, boolean delivery)
     {
         double subtotal = 0;//subtotal to be sent
         switch (size)
         {
-            case "Small":
+            case 0:
                 //small
                 subtotal += 8;
                 break;
-            case "Medium":
+            case 1:
                 //medium
                 subtotal += 10;
                 break;
-            case "Large":
+            case 2:
                 //large
                 subtotal += 12;
                 break;
@@ -69,64 +79,30 @@ public class main
         return subtotal;
     }
 
-    /**
-     * Calculates the total cost, discount, and tax added and prints them out in
-     * order
-     *
-     * @param cost subtotal without tax or discount applied
-     */
-    public static void totals(double cost)
-    {
+    
 
-        if (cost >= 15d)
-        {
-            double total = cost - (cost * 0.1);
-        }
-        else
-        {
-            double total = cost;
-        }
-
-        //first result
-        double grandTotal = cost * 1.13;
-        double tax = grandTotal - cost;
-
-    }
-
-    public static void info(mainFrame frame, String size, int toppings, boolean del)
+    public static void info(mainFrame frame, int size, int toppings, boolean del)
     {
         //is delivery factor & is delevery
-
         double subtotal = input(size, toppings, del);
+        double cost = subtotal;
         int delFact;
         boolean discounted = false;
         boolean extraFee = false;
 
-        //delivery factor
-        if (del)
-        {
-            delFact = 1;
-        }
-        else
-        {
-            delFact = 0;
-        }
-
-        //cost without extras
-        double cost = (subtotal + (delFact * 3d));
-        
-        
-
-        if (cost > 15d)
-        {
-            discounted = true;
-        }
-        else if (cost < 10d)
-        {
-            extraFee = true;
-        }
-
-        if (cost < 15d) // discount if needed
+//        //delivery factor
+//        if (del)
+//        {
+//            delFact = 1;
+//        }
+//        else
+//        {
+//            delFact = 0;
+//        }
+//
+//        //cost without extras or tax
+//        double cost = (subtotal + (delFact * 3d));
+        if (cost > 15d) // discount if needed
         {
             cost = cost - (cost * 0.1);
             discounted = true;
@@ -136,15 +112,12 @@ public class main
             cost += 2;
             extraFee = true;
         }
-
-        //grand total math + display
-        double grandTotal = Math.round((cost * 1.13) * 100) * 0.01;
-        frame.GrandTotalValue.setText(String.valueOf(grandTotal));
+        
 
         //discount text
         if (discounted)
         {
-            frame.DiscountApplied.setText("Yes" );
+            frame.DiscountApplied.setText("Yes");
         }
         else
         {
@@ -161,5 +134,8 @@ public class main
             frame.ExtraFee.setText("No");
         }
 
+        //grand total math + display
+        double grandTotal = (double) Math.round((cost * 1.13) * 100) / 100;
+        frame.GrandTotalValue.setText(String.valueOf(grandTotal));
     }
 }
