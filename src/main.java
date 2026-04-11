@@ -183,4 +183,13 @@ public class Main
         }
         return subtotal;
     }
+    
+    static public void reset()
+    {
+        //reset choices
+        frame.Size.setSelectedIndex(0);
+        frame.jSpinner1.setValue(0);
+        frame.jCheckBox1.setSelected(false);
+        frame.jTextField1.setText("");
+    }
 }

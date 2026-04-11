@@ -245,6 +245,8 @@ public class MainFrame extends javax.swing.JFrame
                 .addGap(0, 0, Short.MAX_VALUE))
         );
 
+        MenuScroller.setBorder(javax.swing.BorderFactory.createTitledBorder(null, "Order Queue - Click on an order to remove it", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Segoe UI", 0, 18))); // NOI18N
+
         Menu.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
         Menu.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][]
@@ -398,17 +400,12 @@ public class MainFrame extends javax.swing.JFrame
                 }
         );
 
-
+        Main.reset();
     }//GEN-LAST:event_jButton2ActionPerformed
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt)//GEN-FIRST:event_jButton1ActionPerformed
     {//GEN-HEADEREND:event_jButton1ActionPerformed
-        //reset choices
-        Size.setSelectedIndex(0);
-        jSpinner1.setValue(0);
-        jCheckBox1.setSelected(false);
-        jTextField1.setText("");
-
+        Main.reset();
     }//GEN-LAST:event_jButton1ActionPerformed
 
     private void jCheckBox1ActionPerformed(java.awt.event.ActionEvent evt)//GEN-FIRST:event_jCheckBox1ActionPerformed
