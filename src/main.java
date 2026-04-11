@@ -6,16 +6,26 @@
 /**
  *
  * @author Ricky Xu & Kaden Wu
+ * 
+ * TODO:
+ * 
+ * work on checks for which cell user clicks in list
+ * implement add to list feature with values added as well
  */
-import javax.swing.*;
 
-public class main
+
+
+import javax.swing.*;
+import java.util.ArrayList;
+
+public class Main
 {
-    static int sleepTime = 20; //delay time for resource management
+    private static int sleepTime = 20; //delay time for resource management
+    public static ArrayList<Order> orderMenu = new ArrayList<>(); //stores order queue
     
     public static void main(String[] args)
     {
-        mainFrame frame = new mainFrame();
+        MainFrame frame = new MainFrame();
         SwingUtilities.invokeLater(() ->
         {
             frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -27,7 +37,6 @@ public class main
         {
             //logic
             info(frame, frame.Size.getSelectedIndex(), (int) frame.jSpinner1.getValue(), frame.jCheckBox1.isSelected());
-
             
             //prevent wasted resources
             try
@@ -80,7 +89,7 @@ public class main
 
     
 
-    public static void info(mainFrame frame, int size, int toppings, boolean del)
+    public static void info(MainFrame frame, int size, int toppings, boolean del)
     {
         //is delivery factor & is delevery
         double subtotal = input(size, toppings, del);
@@ -135,6 +144,6 @@ public class main
 
         //grand total math + display
         double grandTotal = (double) Math.round((cost * 1.13) * 100) / 100;
-        frame.GrandTotalValue.setText(String.valueOf(grandTotal));
+        frame.GrandTotalValue.setText("$ " + String.valueOf(grandTotal));
     }
 }
