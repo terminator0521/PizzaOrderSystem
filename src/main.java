@@ -9,7 +9,7 @@
  * 
  * TODO:
  * 
- * work on checks for which cell user clicks in list
+ * work on checks for which cell user clicks in list to remove row
  * implement add to list feature with values added as well
  */
 
