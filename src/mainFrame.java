@@ -1,4 +1,6 @@
 
+import javax.swing.table.DefaultTableModel;
+import javax.swing.table.TableColumn;
 
 /*
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
@@ -243,22 +245,31 @@ public class MainFrame extends javax.swing.JFrame
                 .addGap(0, 0, Short.MAX_VALUE))
         );
 
+        Menu.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
         Menu.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][]
             {
-                {null, null, null, null, null},
-                {null, null, null, null, null}
+
             },
             new String []
             {
-                "Name", "Size", "Toppings", "Delivery", ""
+                "Name", "Size", "Toppings", "Delivery", "Order Size", "Cost"
             }
         )
         {
+            Class[] types = new Class []
+            {
+                java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.String.class
+            };
             boolean[] canEdit = new boolean []
             {
-                false, false, false, false, false
+                false, false, false, false, true, true
             };
+
+            public Class getColumnClass(int columnIndex)
+            {
+                return types [columnIndex];
+            }
 
             public boolean isCellEditable(int rowIndex, int columnIndex)
             {
@@ -266,8 +277,24 @@ public class MainFrame extends javax.swing.JFrame
             }
         });
         Menu.setRowHeight(90);
+        Menu.setShowGrid(true);
         Menu.setUpdateSelectionOnSort(false);
+        Menu.addMouseListener(new java.awt.event.MouseAdapter()
+        {
+            public void mousePressed(java.awt.event.MouseEvent evt)
+            {
+                MenuMousePressed(evt);
+            }
+        });
         MenuScroller.setViewportView(Menu);
+        if (Menu.getColumnModel().getColumnCount() > 0)
+        {
+            Menu.getColumnModel().getColumn(0).setResizable(false);
+            Menu.getColumnModel().getColumn(0).setPreferredWidth(150);
+            Menu.getColumnModel().getColumn(1).setResizable(false);
+            Menu.getColumnModel().getColumn(2).setResizable(false);
+            Menu.getColumnModel().getColumn(3).setResizable(false);
+        }
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -275,19 +302,21 @@ public class MainFrame extends javax.swing.JFrame
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, 750, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(18, 18, 18)
-                .addComponent(MenuScroller, javax.swing.GroupLayout.PREFERRED_SIZE, 320, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(19, Short.MAX_VALUE))
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                        .addGap(0, 0, Short.MAX_VALUE)
+                        .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, 750, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(MenuScroller))
+                .addContainerGap())
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addGap(25, 25, 25)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(MenuScroller)
-                    .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, 457, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(18, Short.MAX_VALUE))
+                .addContainerGap()
+                .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, 457, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(MenuScroller, javax.swing.GroupLayout.DEFAULT_SIZE, 423, Short.MAX_VALUE)
+                .addContainerGap())
         );
 
         pack();
@@ -300,8 +329,75 @@ public class MainFrame extends javax.swing.JFrame
 
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt)//GEN-FIRST:event_jButton2ActionPerformed
     {//GEN-HEADEREND:event_jButton2ActionPerformed
-        Main.orderMenu.add(new Order(Size.getSelectedIndex(), (int) jSpinner1.getValue(), jCheckBox1.isSelected(), jTextField1.getText()));
-        System.out.println(Main.orderMenu.get(Order.numOfInstances - 1).sizeName);
+        String name;
+        String size;
+        int toppings;
+        String delivery;
+        String orderSize;
+        double cost = 0;
+
+        //assign name
+        name = jTextField1.getText();
+
+        //assign size
+        switch (Size.getSelectedIndex())
+        {
+            case 0:
+                size = "Small";
+                break;
+            case 1:
+                size = "Medium";
+                break;
+            case 2:
+                size = "Large";
+                break;
+            default:
+                size = "";
+                break;
+        }
+
+        //assign topping num
+        toppings = (int) jSpinner1.getValue();
+
+        //assign delivery
+        if (jCheckBox1.isSelected())
+        {
+            delivery = "Yes";
+        }
+        else
+        {
+            delivery = "No";
+        }
+
+        //assign cost
+        cost = Main.grandTotalGlobal;
+
+        //assign order size
+        double subtotal = Main.getSubtotal(Size.getSelectedIndex(), jCheckBox1.isSelected(), (int) jSpinner1.getValue());
+        System.out.println(subtotal);
+        
+        //__use subtotal if you want to calculate order size based on subtotal, else use coset assigned to grand total
+        if (subtotal < 10d)
+        {
+            orderSize = "Small";
+        }
+        else if (subtotal < 20d)
+
+        {
+            orderSize = "Standard";
+        }
+        else
+        {
+            orderSize = "Large";
+        }
+
+        Main.model.addRow(
+                new Object[]
+                {
+                    name, size, toppings, delivery, orderSize, "$" + cost
+                }
+        );
+
 
     }//GEN-LAST:event_jButton2ActionPerformed
 
@@ -325,12 +421,20 @@ public class MainFrame extends javax.swing.JFrame
 
     }//GEN-LAST:event_SizeActionPerformed
 
+    private void MenuMousePressed(java.awt.event.MouseEvent evt)//GEN-FIRST:event_MenuMousePressed
+    {//GEN-HEADEREND:event_MenuMousePressed
+        if (Menu.getSelectedRow() != -1)
+        {
+            Main.model.removeRow(Menu.getSelectedRow());
+        }
+    }//GEN-LAST:event_MenuMousePressed
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
     public javax.swing.JTextField DiscountApplied;
     public javax.swing.JTextField ExtraFee;
     public javax.swing.JTextField GrandTotalValue;
     public javax.swing.JTable Menu;
-    private javax.swing.JScrollPane MenuScroller;
+    public javax.swing.JScrollPane MenuScroller;
     public javax.swing.JComboBox<String> Size;
     private javax.swing.JButton jButton1;
     private javax.swing.JButton jButton2;

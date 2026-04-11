@@ -6,38 +6,44 @@
 /**
  *
  * @author Ricky Xu & Kaden Wu
- * 
+ *
  * TODO:
- * 
+ *
  * work on checks for which cell user clicks in list to remove row
  * implement add to list feature with values added as well
  */
-
-
-
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
 import javax.swing.*;
 import java.util.ArrayList;
+import javax.swing.table.DefaultTableModel;
 
 public class Main
 {
+
+    //init
     private static int sleepTime = 20; //delay time for resource management
-    public static ArrayList<Order> orderMenu = new ArrayList<>(); //stores order queue
+    public static MainFrame frame = new MainFrame();
+    public static DefaultTableModel model = (DefaultTableModel) frame.Menu.getModel();
+    public static double grandTotalGlobal;
+
     
     public static void main(String[] args)
     {
-        MainFrame frame = new MainFrame();
+        //java EDT
         SwingUtilities.invokeLater(() ->
         {
             frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
             frame.setVisible(true);
 
         });
-
+        
+        //main thread logic
         while (true)
         {
             //logic
             info(frame, frame.Size.getSelectedIndex(), (int) frame.jSpinner1.getValue(), frame.jCheckBox1.isSelected());
-            
+
             //prevent wasted resources
             try
             {
@@ -87,8 +93,6 @@ public class Main
         return subtotal;
     }
 
-    
-
     public static void info(MainFrame frame, int size, int toppings, boolean del)
     {
         //is delivery factor & is delevery
@@ -120,7 +124,6 @@ public class Main
             cost += 2;
             extraFee = true;
         }
-        
 
         //discount text
         if (discounted)
@@ -144,6 +147,40 @@ public class Main
 
         //grand total math + display
         double grandTotal = (double) Math.round((cost * 1.13) * 100) / 100;
-        frame.GrandTotalValue.setText("$ " + String.valueOf(grandTotal));
+        
+        grandTotalGlobal = grandTotal;
+        frame.GrandTotalValue.setText("$" + String.valueOf(grandTotal));
+    }
+    
+    public static double getSubtotal(int sizeIndex, boolean isDelivery, int toppings)
+    {
+        double subtotal = 0;
+        
+        //add cost based on size
+        switch (sizeIndex)
+        {
+            case 0:
+                subtotal += 8d;
+                break;
+            case 1:
+                subtotal += 10d;
+                break;
+            case 2:
+                subtotal += 12d;
+                break;
+        }
+        
+        //add $3 if delivery
+        subtotal += isDelivery ? 3d : 0d;
+        
+        //add toppings cost
+        subtotal += (toppings * 1.50d);
+        
+        //add $2 if less than $10 order
+        if(subtotal < 10d) 
+        {
+            subtotal += 2d;
+        }
+        return subtotal;
     }
 }
