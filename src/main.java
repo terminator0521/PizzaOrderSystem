@@ -5,7 +5,7 @@
 
 /**
  *
- * @author 349913095
+ * @author Ricky Xu & Kaden Wu
  */
 import javax.swing.*;
 
@@ -18,7 +18,6 @@ public class main
         mainFrame frame = new mainFrame();
         SwingUtilities.invokeLater(() ->
         {
-            frame.setSize(300, 300);
             frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
             frame.setVisible(true);
 
