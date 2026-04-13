@@ -12,17 +12,14 @@
  * work on checks for which cell user clicks in list to remove row
  * implement add to list feature with values added as well
  */
-import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
 import javax.swing.*;
-import java.util.ArrayList;
 import javax.swing.table.DefaultTableModel;
 
 public class Main
 {
 
     //init
-    private static int sleepTime = 20; //delay time for resource management
+    private static final int sleepTime = 20; //delay time for resource management
     public static MainFrame frame = new MainFrame();
     public static DefaultTableModel model = (DefaultTableModel) frame.Menu.getModel();
     public static double grandTotalGlobal;
