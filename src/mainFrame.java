@@ -376,7 +376,6 @@ public class MainFrame extends javax.swing.JFrame
 
         //assign order size
         double subtotal = Main.getSubtotal(Size.getSelectedIndex(), jCheckBox1.isSelected(), (int) jSpinner1.getValue());
-        System.out.println(subtotal);
         
         //__use subtotal if you want to calculate order size based on subtotal, else use coset assigned to grand total
         if (subtotal < 10d)
